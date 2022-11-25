@@ -1,0 +1,336 @@
+@startuml
+class org.apache.commons.csv.CSVParser {
+- CSVFormat format
+- Map<String,Integer> headerMap
+- List<String> headerNames
+- Lexer lexer
+- CSVRecordIterator csvRecordIterator
+- List<String> recordList
+- long recordNumber
+- long characterOffset
+- Token reusableToken
++ {static} CSVParser parse(File,Charset,CSVFormat)
++ {static} CSVParser parse(InputStream,Charset,CSVFormat)
++ {static} CSVParser parse(Path,Charset,CSVFormat)
++ {static} CSVParser parse(Reader,CSVFormat)
++ {static} CSVParser parse(String,CSVFormat)
++ {static} CSVParser parse(URL,Charset,CSVFormat)
+- void addRecordValue(boolean)
++ void close()
+- Map<String,Integer> createEmptyHeaderMap()
+- Headers createHeaders()
++ long getCurrentLineNumber()
++ String getFirstEndOfLine()
++ Map<String,Integer> getHeaderMap()
+~ Map<String,Integer> getHeaderMapRaw()
++ List<String> getHeaderNames()
++ long getRecordNumber()
++ List<CSVRecord> getRecords()
++ boolean isClosed()
++ Iterator<CSVRecord> iterator()
+~ CSVRecord nextRecord()
+}
+class org.apache.commons.csv.CSVParser.CSVRecordIterator {
+- CSVRecord current
+- CSVRecord getNextRecord()
++ boolean hasNext()
++ CSVRecord next()
++ void remove()
+}
+class org.apache.commons.csv.CSVParser.Headers {
+~ Map<String,Integer> headerMap
+~ List<String> headerNames
+}
+class org.apache.commons.csv.Lexer {
+- {static} String CR_STRING
+- {static} String LF_STRING
+- {static} char DISABLED
+- char delimiter
+- char escape
+- char quoteChar
+- char commentStart
+- boolean ignoreSurroundingSpaces
+- boolean ignoreEmptyLines
+- ExtendedBufferedReader reader
+- String firstEol
++ void close()
+~ long getCharacterPosition()
+~ long getCurrentLineNumber()
+~ String getFirstEol()
+~ boolean isClosed()
+~ boolean isCommentStart(int)
+~ boolean isDelimiter(int)
+~ boolean isEndOfFile(int)
+~ boolean isEscape(int)
+- boolean isMetaChar(int)
+~ boolean isQuoteChar(int)
+~ boolean isStartOfLine(int)
+~ boolean isWhitespace(int)
+- char mapNullToDisabled(Character)
+~ Token nextToken(Token)
+- Token parseEncapsulatedToken(Token)
+- Token parseSimpleToken(Token,int)
+~ boolean readEndOfLine(int)
+~ int readEscape()
+~ void trimTrailingSpaces(StringBuilder)
+}
+class org.apache.commons.csv.Token {
+- {static} int INITIAL_TOKEN_LENGTH
+~ Token.Type type
+~ StringBuilder content
+~ boolean isReady
+~ void reset()
++ String toString()
+}
+enum org.apache.commons.csv.Type {
++  INVALID
++  TOKEN
++  EOF
++  EORECORD
++  COMMENT
+}
+class org.apache.commons.csv.CSVPrinter {
+- Appendable out
+- CSVFormat format
+- boolean newRecord
++ void close()
++ void close(boolean)
++ void flush()
++ Appendable getOut()
++ void print(Object)
++ void printComment(String)
++ void println()
++ void printRecord(Iterable<?>)
++ void printRecord(Object)
++ void printRecords(Iterable<?>)
++ void printRecords(Object)
++ void printRecords(ResultSet)
+}
+enum org.apache.commons.csv.QuoteMode {
++  ALL
++  ALL_NON_NULL
++  MINIMAL
++  NON_NUMERIC
++  NONE
+}
+class org.apache.commons.csv.IOUtils {
+~ {static} int DEFAULT_BUFFER_SIZE
+- {static} int EOF
+~ {static} long copy(Reader,Appendable)
+~ {static} long copy(Reader,Appendable,CharBuffer)
+~ {static} long copyLarge(Reader,Writer)
+~ {static} long copyLarge(Reader,Writer,char[])
+}
+class org.apache.commons.csv.CSVFormat {
++ {static} CSVFormat DEFAULT
++ {static} CSVFormat EXCEL
++ {static} CSVFormat INFORMIX_UNLOAD
++ {static} CSVFormat INFORMIX_UNLOAD_CSV
++ {static} CSVFormat MONGODB_CSV
++ {static} CSVFormat MONGODB_TSV
++ {static} CSVFormat MYSQL
++ {static} CSVFormat ORACLE
++ {static} CSVFormat POSTGRESQL_CSV
++ {static} CSVFormat POSTGRESQL_TEXT
++ {static} CSVFormat RFC4180
+- {static} long serialVersionUID
++ {static} CSVFormat TDF
+- boolean allowDuplicateHeaderNames
+- boolean allowMissingColumnNames
+- boolean autoFlush
+- Character commentMarker
+- char delimiter
+- Character escapeCharacter
+- String[] header
+- String[] headerComments
+- boolean ignoreEmptyLines
+- boolean ignoreHeaderCase
+- boolean ignoreSurroundingSpaces
+- String nullString
+- Character quoteCharacter
+- String quotedNullString
+- QuoteMode quoteMode
+- String recordSeparator
+- boolean skipHeaderRecord
+- boolean trailingDelimiter
+- boolean trim
+- {static} boolean isLineBreak(char)
+- {static} boolean isLineBreak(Character)
++ {static} CSVFormat newFormat(char)
++ {static} CSVFormat valueOf(String)
++ boolean equals(Object)
++ String format(Object)
++ boolean getAllowDuplicateHeaderNames()
++ boolean getAllowMissingColumnNames()
++ boolean getAutoFlush()
++ Character getCommentMarker()
++ char getDelimiter()
++ Character getEscapeCharacter()
++ String[] getHeader()
++ String[] getHeaderComments()
++ boolean getIgnoreEmptyLines()
++ boolean getIgnoreHeaderCase()
++ boolean getIgnoreSurroundingSpaces()
++ String getNullString()
++ Character getQuoteCharacter()
++ QuoteMode getQuoteMode()
++ String getRecordSeparator()
++ boolean getSkipHeaderRecord()
++ boolean getTrailingDelimiter()
++ boolean getTrim()
++ int hashCode()
++ boolean isCommentMarkerSet()
++ boolean isEscapeCharacterSet()
++ boolean isNullStringSet()
++ boolean isQuoteCharacterSet()
++ CSVParser parse(Reader)
++ CSVPrinter print(Appendable)
++ CSVPrinter print(File,Charset)
++ void print(Object,Appendable,boolean)
+- void print(Object,CharSequence,Appendable,boolean)
++ CSVPrinter print(Path,Charset)
+- void print(Reader,Appendable,boolean)
++ CSVPrinter printer()
++ void println(Appendable)
++ void printRecord(Appendable,Object)
+- void printWithEscapes(CharSequence,Appendable)
+- void printWithEscapes(Reader,Appendable)
+- void printWithQuotes(Object,CharSequence,Appendable,boolean)
+- void printWithQuotes(Reader,Appendable)
++ String toString()
+- String[] toStringArray(Object[])
+- CharSequence trim(CharSequence)
+- void validate()
++ CSVFormat withAllowDuplicateHeaderNames()
++ CSVFormat withAllowDuplicateHeaderNames(boolean)
++ CSVFormat withAllowMissingColumnNames()
++ CSVFormat withAllowMissingColumnNames(boolean)
++ CSVFormat withAutoFlush(boolean)
++ CSVFormat withCommentMarker(char)
++ CSVFormat withCommentMarker(Character)
++ CSVFormat withDelimiter(char)
++ CSVFormat withEscape(char)
++ CSVFormat withEscape(Character)
++ CSVFormat withFirstRecordAsHeader()
++ CSVFormat withHeader(Class<? extends Enum<?>>)
++ CSVFormat withHeader(ResultSet)
++ CSVFormat withHeader(ResultSetMetaData)
++ CSVFormat withHeader(String)
++ CSVFormat withHeaderComments(Object)
++ CSVFormat withIgnoreEmptyLines()
++ CSVFormat withIgnoreEmptyLines(boolean)
++ CSVFormat withIgnoreHeaderCase()
++ CSVFormat withIgnoreHeaderCase(boolean)
++ CSVFormat withIgnoreSurroundingSpaces()
++ CSVFormat withIgnoreSurroundingSpaces(boolean)
++ CSVFormat withNullString(String)
++ CSVFormat withQuote(char)
++ CSVFormat withQuote(Character)
++ CSVFormat withQuoteMode(QuoteMode)
++ CSVFormat withRecordSeparator(char)
++ CSVFormat withRecordSeparator(String)
++ CSVFormat withSkipHeaderRecord()
++ CSVFormat withSkipHeaderRecord(boolean)
++ CSVFormat withSystemRecordSeparator()
++ CSVFormat withTrailingDelimiter()
++ CSVFormat withTrailingDelimiter(boolean)
++ CSVFormat withTrim()
++ CSVFormat withTrim(boolean)
+}
+enum org.apache.commons.csv.Predefined {
++  Default
++  Excel
++  InformixUnload
++  InformixUnloadCsv
++  MongoDBCsv
++  MongoDBTsv
++  MySQL
++  Oracle
++  PostgreSQLCsv
++  PostgreSQLText
++  RFC4180
++  TDF
+- CSVFormat format
++ CSVFormat getFormat()
+}
+class org.apache.commons.csv.CSVRecord {
+- {static} String[] EMPTY_STRING_ARRAY
+- {static} long serialVersionUID
+- long characterPosition
+- String comment
+- long recordNumber
+- String[] values
+- CSVParser parser
++ String get(Enum<?>)
++ String get(int)
++ String get(String)
++ long getCharacterPosition()
++ String getComment()
+- Map<String,Integer> getHeaderMapRaw()
++ CSVParser getParser()
++ long getRecordNumber()
++ boolean hasComment()
++ boolean isConsistent()
++ boolean isMapped(String)
++ boolean isSet(int)
++ boolean isSet(String)
++ Iterator<String> iterator()
++ M putIn(M)
++ int size()
+- List<String> toList()
++ Map<String,String> toMap()
++ String toString()
+~ String[] values()
+}
+class org.apache.commons.csv.ExtendedBufferedReader {
+- int lastChar
+- long eolCounter
+- long position
+- boolean closed
++ void close()
+~ long getCurrentLineNumber()
+~ int getLastChar()
+~ long getPosition()
++ boolean isClosed()
+~ int lookAhead()
++ int read()
++ int read(char[],int,int)
++ String readLine()
+}
+class org.apache.commons.csv.Constants {
+~ {static} char BACKSLASH
+~ {static} char BACKSPACE
+~ {static} char COMMA
+~ {static} char COMMENT
+~ {static} char CR
+~ {static} String CRLF
+~ {static} Character DOUBLE_QUOTE_CHAR
+~ {static} String EMPTY
+~ {static} int END_OF_STREAM
+~ {static} char FF
+~ {static} char LF
+~ {static} String LINE_SEPARATOR
+~ {static} String NEXT_LINE
+~ {static} String PARAGRAPH_SEPARATOR
+~ {static} char PIPE
+~ {static} char RS
+~ {static} char SP
+~ {static} char TAB
+~ {static} int UNDEFINED
+~ {static} char US
+}
+
+
+org.apache.commons.csv.Iterable <|.. org.apache.commons.csv.CSVParser
+java.io.Closeable <|.. org.apache.commons.csv.CSVParser
+org.apache.commons.csv.CSVParser +.. org.apache.commons.csv.CSVParser.CSVRecordIterator
+org.apache.commons.csv.Iterator <|.. org.apache.commons.csv.CSVParser.CSVRecordIterator
+org.apache.commons.csv.CSVParser +.. org.apache.commons.csv.CSVParser.Headers
+java.io.Closeable <|.. org.apache.commons.csv.Lexer
+java.io.Flushable <|.. org.apache.commons.csv.CSVPrinter
+java.io.Closeable <|.. org.apache.commons.csv.CSVPrinter
+java.io.Serializable <|.. org.apache.commons.csv.CSVFormat
+java.io.Serializable <|.. org.apache.commons.csv.CSVRecord
+org.apache.commons.csv.Iterable <|.. org.apache.commons.csv.CSVRecord
+java.io.BufferedReader <|-- org.apache.commons.csv.ExtendedBufferedReader
+@enduml

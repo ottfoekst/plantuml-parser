@@ -4,6 +4,8 @@ import com.github.javaparser.ast.*;
 import com.github.javaparser.ast.body.*;
 import com.github.javaparser.ast.type.ClassOrInterfaceType;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
+import com.shuzijun.plantumlparser.core.refactoring.Visibility;
+import com.shuzijun.plantumlparser.core.refactoring.VisibilitySpecifyService;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -146,12 +148,7 @@ public class ClassVoidVisitor extends VoidVisitorAdapter<PUml> {
         PUmlClass pUmlClass = (PUmlClass) pUml;
         PUmlField pUmlField = new PUmlField();
         if (field.getModifiers().size() != 0) {
-            for (Modifier modifier : field.getModifiers()) {
-                if (VisibilityUtils.isVisibility(modifier.toString().trim())) {
-                    pUmlField.setVisibility(modifier.toString().trim());
-                    break;
-                }
-            }
+            pUmlField.setVisibility(VisibilitySpecifyService.findVisibility(field.getModifiers()));
         }
         if (parserConfig.isFieldModifier(pUmlField.getVisibility())) {
             pUmlField.setStatic(field.isStatic());
@@ -180,12 +177,7 @@ public class ClassVoidVisitor extends VoidVisitorAdapter<PUml> {
         PUmlClass pUmlClass = (PUmlClass) pUml;
         PUmlMethod pUmlMethod = new PUmlMethod();
         if (constructor.getModifiers().size() != 0) {
-            for (Modifier modifier : constructor.getModifiers()) {
-                if (VisibilityUtils.isVisibility(modifier.toString().trim())) {
-                    pUmlMethod.setVisibility(modifier.toString().trim());
-                    break;
-                }
-            }
+            pUmlMethod.setVisibility(VisibilitySpecifyService.findVisibility(constructor.getModifiers()));
         }
         if (parserConfig.isMethodModifier(pUmlMethod.getVisibility())) {
             pUmlMethod.setStatic(constructor.isStatic());
@@ -215,12 +207,7 @@ public class ClassVoidVisitor extends VoidVisitorAdapter<PUml> {
         PUmlMethod pUmlMethod = new PUmlMethod();
 
         if (method.getModifiers().size() != 0) {
-            for (Modifier modifier : method.getModifiers()) {
-                if (VisibilityUtils.isVisibility(modifier.toString().trim())) {
-                    pUmlMethod.setVisibility(modifier.toString().trim());
-                    break;
-                }
-            }
+            pUmlMethod.setVisibility(VisibilitySpecifyService.findVisibility(method.getModifiers()));
         }
         if (parserConfig.isMethodModifier(pUmlMethod.getVisibility())) {
             pUmlMethod.setStatic(method.isStatic());
@@ -251,7 +238,7 @@ public class ClassVoidVisitor extends VoidVisitorAdapter<PUml> {
 
         pUmlField.setName(enumConstantDeclaration.getNameAsString());
         pUmlField.setType("");
-        pUmlField.setVisibility("public");
+        pUmlField.setVisibility(Visibility.PUBLIC);
         pUmlClass.addPUmlFieldList(pUmlField);
 
         if (parserConfig.isShowComment()) {

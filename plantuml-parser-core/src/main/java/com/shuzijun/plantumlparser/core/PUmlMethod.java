@@ -1,5 +1,7 @@
 package com.shuzijun.plantumlparser.core;
 
+import com.shuzijun.plantumlparser.core.refactoring.Visibility;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -11,7 +13,7 @@ import java.util.stream.Collectors;
  */
 public class PUmlMethod {
 
-    private String visibility = "default";
+    private Visibility visibility = Visibility.DEFAULT;
 
     private boolean isStatic;
 
@@ -26,10 +28,10 @@ public class PUmlMethod {
     private String comment;
 
     public String getVisibility() {
-        return visibility;
+        return visibility.getName();
     }
 
-    public void setVisibility(String visibility) {
+    public void setVisibility(Visibility visibility) {
         this.visibility = visibility;
     }
 
@@ -83,7 +85,7 @@ public class PUmlMethod {
 
     @Override
     public String toString() {
-        return VisibilityUtils.toCharacter(visibility) + " " + (isStatic ? "{static} " : "") + (isAbstract ? "{abstract}" : "")
+        return visibility.getPUmlSymbol() + " " + (isStatic ? "{static} " : "") + (isAbstract ? "{abstract}" : "")
                 + returnType + " " + name + "("
                 + (paramList.isEmpty() ? "" : paramList.stream().collect(Collectors.joining(",")))
                 + ")";

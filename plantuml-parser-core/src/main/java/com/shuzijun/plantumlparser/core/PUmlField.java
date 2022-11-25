@@ -1,5 +1,7 @@
 package com.shuzijun.plantumlparser.core;
 
+import com.shuzijun.plantumlparser.core.refactoring.Visibility;
+
 /**
  * plantUml字段
  *
@@ -7,7 +9,7 @@ package com.shuzijun.plantumlparser.core;
  */
 public class PUmlField implements PUml {
 
-    private String visibility = "default";
+    private Visibility visibility = Visibility.DEFAULT;
 
     private boolean isStatic;
 
@@ -18,10 +20,10 @@ public class PUmlField implements PUml {
     private String comment;
 
     public String getVisibility() {
-        return visibility;
+        return visibility.getName();
     }
 
-    public void setVisibility(String visibility) {
+    public void setVisibility(Visibility visibility) {
         this.visibility = visibility;
     }
 
@@ -59,7 +61,7 @@ public class PUmlField implements PUml {
 
     @Override
     public String toString() {
-        return VisibilityUtils.toCharacter(visibility) + " " + (isStatic ? "{static} " : "")
+        return visibility.getPUmlSymbol() + " " + (isStatic ? "{static} " : "")
                 + type + " " + name;
     }
 }

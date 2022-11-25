@@ -4,6 +4,7 @@
 .gradle
 /build/
 
+plantuml-parser-cli/build
 plantuml-parser-core/build
 plantuml-parser-plugin/build
 
