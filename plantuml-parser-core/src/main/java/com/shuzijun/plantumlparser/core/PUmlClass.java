@@ -65,7 +65,7 @@ public class PUmlClass implements PUml{
 
     @Override
     public String toString() {
-        String fullClassName = packageName.getNameAsString() + "." + className;
+        String fullClassName = (packageName.getNameAsString().isEmpty() ? "" : packageName.getNameAsString() + "." ) + className;
 
         String classStr = classType + " " + fullClassName + " {\n" +
                 (pUmlFieldList.isEmpty() ? "" : pUmlFieldList.stream().map(pUmlField -> pUmlField.toString()).collect(Collectors.joining("\n")) + "\n") +
