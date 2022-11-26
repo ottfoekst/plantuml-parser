@@ -1,5 +1,6 @@
 package com.shuzijun.plantumlparser.core;
 
+import com.shuzijun.plantumlparser.core.refactoring.PUmlIndent;
 import com.shuzijun.plantumlparser.core.refactoring.PackageName;
 import lombok.RequiredArgsConstructor;
 
@@ -67,9 +68,10 @@ public class PUmlClass implements PUml{
     public String toString() {
         String fullClassName = (packageName.getNameAsString().isEmpty() ? "" : packageName.getNameAsString() + "." ) + className;
 
+        PUmlIndent indent = PUmlIndent.valueOf(1);
         String classStr = classType + " " + fullClassName + " {\n" +
-                (pUmlFieldList.isEmpty() ? "" : pUmlFieldList.stream().map(pUmlField -> pUmlField.toString()).collect(Collectors.joining("\n")) + "\n") +
-                (pUmlMethodList.isEmpty() ? "" : pUmlMethodList.stream().map(pUmlField -> pUmlField.toString()).collect(Collectors.joining("\n")) + "\n") +
+                (pUmlFieldList.isEmpty() ? "" : pUmlFieldList.stream().map(pUmlField -> indent.getIndentAsString() + pUmlField.toString()).collect(Collectors.joining("\n")) + "\n") +
+                (pUmlMethodList.isEmpty() ? "" : pUmlMethodList.stream().map(pUmlField -> indent.getIndentAsString() + pUmlField.toString()).collect(Collectors.joining("\n")) + "\n") +
                 "}";
 
         if(getClassComment() != null && getClassComment().length() > 0){
