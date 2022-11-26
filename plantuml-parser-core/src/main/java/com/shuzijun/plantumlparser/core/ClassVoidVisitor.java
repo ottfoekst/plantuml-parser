@@ -4,8 +4,10 @@ import com.github.javaparser.ast.*;
 import com.github.javaparser.ast.body.*;
 import com.github.javaparser.ast.type.ClassOrInterfaceType;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
+import com.shuzijun.plantumlparser.core.refactoring.PackageName;
 import com.shuzijun.plantumlparser.core.refactoring.Visibility;
 import com.shuzijun.plantumlparser.core.refactoring.VisibilitySpecifyService;
+import lombok.AllArgsConstructor;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,16 +17,12 @@ import java.util.Map;
  *
  * @author shuzijun
  */
+@AllArgsConstructor
 public class ClassVoidVisitor extends VoidVisitorAdapter<PUml> {
 
-    private final String packageName;
+    private final PackageName packageName;
 
     private final ParserConfig parserConfig;
-
-    public ClassVoidVisitor(String packageName, ParserConfig parserConfig) {
-        this.packageName = packageName;
-        this.parserConfig = parserConfig;
-    }
 
     @Override
     public void visit(ClassOrInterfaceDeclaration cORid, PUml pUml) {
@@ -36,7 +34,7 @@ public class ClassVoidVisitor extends VoidVisitorAdapter<PUml> {
             return;
         }
         PUmlView pUmlView = (PUmlView) pUml;
-        PUmlClass pUmlClass = createUmlClass();
+        PUmlClass pUmlClass = new PUmlClass(packageName);
 
         pUmlClass.setClassName(cORid.getNameAsString());
         if (cORid.isInterface()) {
@@ -119,7 +117,7 @@ public class ClassVoidVisitor extends VoidVisitorAdapter<PUml> {
             return;
         }
         PUmlView pUmlView = (PUmlView) pUml;
-        PUmlClass pUmlClass = createUmlClass();
+        PUmlClass pUmlClass = new PUmlClass(packageName);
 
         pUmlClass.setClassName(enumDeclaration.getNameAsString());
         pUmlClass.setClassType("enum");
@@ -246,16 +244,6 @@ public class ClassVoidVisitor extends VoidVisitorAdapter<PUml> {
                 pUmlField.setComment(comment.getContent());
             });
         }
-    }
-
-    private PUmlClass createUmlClass() {
-        PUmlClass pUmlClass = new PUmlClass();
-        if (parserConfig.isShowPackage()) {
-            pUmlClass.setPackageName(packageName);
-        } else {
-            pUmlClass.setPackageName("");
-        }
-        return pUmlClass;
     }
 
     private NodeList<ImportDeclaration> parseImport(Node node, PUmlClass pUmlClass, PUmlView pUmlView) {

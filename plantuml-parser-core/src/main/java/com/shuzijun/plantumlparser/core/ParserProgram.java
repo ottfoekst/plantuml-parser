@@ -5,6 +5,7 @@ import com.github.javaparser.StaticJavaParser;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.PackageDeclaration;
 import com.github.javaparser.ast.visitor.VoidVisitor;
+import com.shuzijun.plantumlparser.core.refactoring.PackageNameFactory;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
@@ -39,7 +40,7 @@ public class ParserProgram {
         for (File file : files) {
             CompilationUnit compilationUnit = StaticJavaParser.parse(file);
             Optional<PackageDeclaration> packageDeclaration = compilationUnit.getPackageDeclaration();
-            VoidVisitor<PUml> classNameCollector = new ClassVoidVisitor(packageDeclaration.isPresent() ? packageDeclaration.get().getNameAsString() : "", parserConfig);
+            VoidVisitor<PUml> classNameCollector = new ClassVoidVisitor(PackageNameFactory.create(parserConfig, packageDeclaration), parserConfig);
             classNameCollector.visit(compilationUnit, pUmlView);
 
         }

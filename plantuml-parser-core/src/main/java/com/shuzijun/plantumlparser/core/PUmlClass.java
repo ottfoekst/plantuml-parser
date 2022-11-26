@@ -1,5 +1,8 @@
 package com.shuzijun.plantumlparser.core;
 
+import com.shuzijun.plantumlparser.core.refactoring.PackageName;
+import lombok.RequiredArgsConstructor;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -9,8 +12,9 @@ import java.util.stream.Collectors;
  *
  * @author shuzijun
  */
+@RequiredArgsConstructor
 public class PUmlClass implements PUml{
-    private String packageName;
+    private final PackageName packageName;
 
     private String className;
 
@@ -23,11 +27,7 @@ public class PUmlClass implements PUml{
     private List<PUmlMethod> pUmlMethodList = new LinkedList<>();
 
     public String getPackageName() {
-        return packageName;
-    }
-
-    public void setPackageName(String packageName) {
-        this.packageName = packageName;
+        return packageName.getNameAsString();
     }
 
     public String getClassName() {
@@ -65,8 +65,7 @@ public class PUmlClass implements PUml{
 
     @Override
     public String toString() {
-
-        String fullClassName = ((packageName == null || packageName.trim().equals("")) ? "" : (packageName + ".")) + className;
+        String fullClassName = packageName.getNameAsString() + "." + className;
 
         String classStr = classType + " " + fullClassName + " {\n" +
                 (pUmlFieldList.isEmpty() ? "" : pUmlFieldList.stream().map(pUmlField -> pUmlField.toString()).collect(Collectors.joining("\n")) + "\n") +
